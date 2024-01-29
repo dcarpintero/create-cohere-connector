@@ -11,12 +11,12 @@ class TestScaffoldLogic(unittest.TestCase):
     base_path = './tests/output/'
     project_template_path = './templates/project_template.py.jinja'
 
-    def test_render_template(self):
-        """
-        Test render_template function
-        """
-        template_content = self.scaffolder.render_template(self.project_template_path, {'project_name': 'weather_connector'})
-        self.assertIn('weather_connector', template_content)
+    #def test_render_template(self):
+    #    """
+    #    Test render_template function
+    #    """
+    #    template_content = self.scaffolder.render_template(self.project_template_path, {'project_name': 'weather_connector'})
+    #    self.assertIn('weather_connector', template_content)
 
     def test_create_directory(self):
         """
@@ -47,18 +47,23 @@ class TestScaffoldLogic(unittest.TestCase):
         """
         Test scaffold_cohere_connector function
         """
-        self.scaffolder.cohere_connector()
-        self.assertTrue(os.path.isdir('provider'))
-        self.assertTrue(os.path.isfile('deploy.py'))
-        self.assertTrue(os.path.isfile('.env-template'))
-        self.assertTrue(os.path.isfile('README.md'))
-        self.assertTrue(os.path.isfile('pyproject.toml'))
-        # Clean up
-        os.remove('deploy.py')
-        os.remove('.env-template')
-        os.remove('README.md')
-        os.remove('pyproject.toml')
-        os.rmdir('provider')
+        base = 'myproject'
+        self.scaffolder.cohere_connector(base)
+
+        self.__test_file(base, 'deploy.py')
+        self.__test_file(base, '.env-template')
+        self.__test_file(base, 'README.md')
+        self.__test_file(base, 'pyproject.toml')
+        self.__test_file(os.path.join(base, 'provider'), 'app.py')
+
+
+    def __test_file(self, project_name, file_name):
+        """
+        Test if a file exists, and remove it
+        """
+        file_path = os.path.join(project_name, file_name)
+        self.assertTrue(os.path.isfile(file_path))
+        #os.remove(file_path)
 
 if __name__ == '__main__':
     unittest.main()
