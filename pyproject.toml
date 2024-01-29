@@ -2,7 +2,7 @@
 name = "cohere-connector-box"
 version = "0.1.0"
 description = "Scaffold a custom Cohere connector"
-authors = ["Diego Carpintero <6709785+dcarpintero@users.noreply.github.com>"]
+authors = ["dcarpintero"]
 license = "Apache 2.0"
 readme = "README.md"
 
