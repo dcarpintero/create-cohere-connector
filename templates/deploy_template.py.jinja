@@ -1,0 +1,17 @@
+import os
+import cohere
+from dotenv import load_dotenv
+
+load_dotenv()
+co = cohere.Client(os.getenv("COHERE_API_KEY"))
+
+created_connector = co.create_connector(
+    name=os.getenv("CONNECTOR_NAME"),
+    url=os.getenv("CONNECTOR_URL"),
+    service_auth={
+        "type": "bearer",
+        "token": os.getenv("SERVICE_API_KEY"),
+    },
+)
+
+print(created_connector)
