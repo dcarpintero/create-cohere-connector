@@ -62,10 +62,10 @@ and install dependencies:
 
 2. Start API service
 
-Inside the provider directory:
+Inside the ``provider`` directory:
 
 ```
-uvicorn provider.app:app --reload
+uvicorn app:app --reload
 ```
 
 3. Deploy Cohere Connector

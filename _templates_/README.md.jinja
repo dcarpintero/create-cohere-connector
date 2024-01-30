@@ -1,3 +1,65 @@
 # {{ project_name }}
 
-Description of your project.
+Custom [Cohere Connector](https://docs.cohere.com/docs/connectors) to combine Cohere's large language models (LLMs), with up-to-date factual information. 
+This enhances Cohere's retrieval augmented generation (RAG) offering, and can respond to user questions and prompts with substantive, grounded generations 
+that contain citations to external public or private knowledge bases.
+
+## 🚀 Quickstart
+
+1. Install ``create-cohere-connector`` package:
+
+```sh
+pip install create-cohere-connector
+```
+
+2. Bootstrap your project:
+
+```sh
+create-cohere-connector
+```
+
+This will prompt for a project name:
+
+```sh
+Project name [myconnector]: hello-connector
+Api framework [FastAPI]: FastAPI
+Authentication [Bearer]: Bearer
+Caching [None]: None
+```
+
+generate the initial project structure:
+
+```
+myconnector
+├── README.md
+├── deploy.py
+├── Dockerfile
+├── pyproject.toml
+├── poetry.lock
+├── .gitignore
+└── provider
+    ├── __init__.py
+    ├── app.py
+    ├── client.py
+    └── datamodels.py
+```
+
+and install dependencies:
+
+```sh
+✅ Project created successfully!
+```
+
+2. Start API service
+
+Inside the ``provider`` directory:
+
+```
+uvicorn app:app --reload
+```
+
+3. Deploy Cohere Connector
+
+```
+python deploy.py
+```
