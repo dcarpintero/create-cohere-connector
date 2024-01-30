@@ -90,6 +90,10 @@ class Scaffolder:
         readme_content = self.render_template('README.md.jinja', {'project_name': project_name})
         self.create_file(f'{project_name}/README.md', readme_content)
 
+        # .gitingore
+        gitignore_content = self.render_template('.gitignore.jinja')
+        self.create_file(f'{project_name}/.gitignore', gitignore_content)
+
         # provider/app.py
         app_content = self.render_template('app.py.jinja')
         file_path = os.path.join(provider_path, 'app.py')

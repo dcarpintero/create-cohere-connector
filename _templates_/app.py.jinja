@@ -1,0 +1,59 @@
+# app.py
+import logging
+import os
+from datetime import datetime
+from typing import List, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, Header, Request
+from pydantic import BaseModel
+
+from client import CustomClient  # Import CustomClient
+
+logging.basicConfig(level=logging.INFO)
+app = FastAPI()
+
+# Environment vars and authentication methods remain the same
+
+# ----------------------------------------------------
+# Pydantic Models
+# ----------------------------------------------------
+class SimpleData(BaseModel):
+    """Model representing simple data."""
+    id: int
+    name: str
+    description: str
+
+class SearchDataBody(BaseModel):
+    query: Optional[str] = None
+
+class SearchDataResponse(BaseModel):
+    """Model for search response."""
+    results: List[SimpleData]
+
+# ----------------------------------------------------
+# Custom Client Initialization
+# ----------------------------------------------------
+custom_client = CustomClient()
+
+# ----------------------------------------------------
+# API Endpoints
+# ----------------------------------------------------
+@app.post("/search", response_model=SearchDataResponse)
+async def search_data(request: Request, user: None = Depends(authenticate_user)) -> SearchDataResponse:
+    """Endpoint to get data based on a query."""
+    try:
+        body = await request.json()
+        search_body = SearchDataBody(**body)
+
+        query = search_body.query
+        logging.info(f"Received search_data request with query: {query}")
+
+        data = custom_client.get_data(query)
+        return SearchDataResponse(results=[SimpleData(**d) for d in data])
+    except Exception as error:
+        logging.error(f"search_data encountered an error: {error}")
+        return SearchDataResponse(results=[])
+
+# Main 
+if __name__ == "__main__":
+    uvicorn.run(app, host='0.0.0.0', port=8080)
