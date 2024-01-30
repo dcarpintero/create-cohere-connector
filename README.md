@@ -60,7 +60,11 @@ and install dependencies:
 ✅ Project created successfully!
 ```
 
-2. Start API service
+3. Set environment variables
+
+You might rename ``.env_template`` to ``.env``, and complete it.
+
+4. Start API service
 
 Inside the ``provider`` directory:
 
@@ -68,7 +72,7 @@ Inside the ``provider`` directory:
 uvicorn app:app --reload
 ```
 
-3. Deploy Cohere Connector
+5. Deploy Cohere Connector
 
 ```
 python deploy.py
