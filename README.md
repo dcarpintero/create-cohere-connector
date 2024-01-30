@@ -1,4 +1,4 @@
-# Create Cohere Connector [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/dcarpintero/create-cohere-connector/)
+# Create Cohere Connector [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/dcarpintero/create-cohere-connector/) [![PyPi](https://img.shields.io/pypi/v/create-cohere-connector)](https://pypi.org/project/create-cohere-connector/)
 
 Generates a custom Cohere Connector with one command. [Cohere Connectors](https://docs.cohere.com/docs/connectors) enable to combine Cohere's large language models (LLMs), which power the [Chat API](https://docs.cohere.com/docs/cochat-beta), with up-to-date factual information. They enhance Cohere's retrieval augmented generation (RAG) offering, and can respond to user questions and prompts with substantive, grounded generations that contain citations to external public or private knowledge bases.
 
