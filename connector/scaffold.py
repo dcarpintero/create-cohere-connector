@@ -103,3 +103,8 @@ class Scaffolder:
         client_content = self.render_template('client.py.jinja')
         file_path = os.path.join(provider_path, 'client.py')
         self.create_file(file_path, client_content)
+
+        # provider/datamodels.py
+        datamodels_content = self.render_template('datamodels.py.jinja')
+        file_path = os.path.join(provider_path, 'datamodels.py')
+        self.create_file(file_path, datamodels_content)
