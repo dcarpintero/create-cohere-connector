@@ -1,10 +1,15 @@
 import os
+import subprocess
 import typer
-from create_connector_project.scaffold import Scaffolder
-from jinja2 import Environment, FileSystemLoader
+from .scaffold import Scaffolder
 
 app = typer.Typer()
 
+def run_command(command):
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        error_message = result.stderr.strip() or result.stdout.strip()
+        raise Exception(f"Error executing {' '.join(command)}: {error_message}")
 
 @app.command()
 def create_connector_project(
@@ -13,19 +18,21 @@ def create_connector_project(
     authentication: str = typer.Option("Bearer", prompt=True),
     caching: str = typer.Option("None", prompt=True),
 ):
-    typer.echo("\n⏳ Creating Connector Project...\n")
+    try:
+        typer.echo("\n⏳ Creating Connector Project...\n")
 
-    scaffolder = Scaffolder()
-    scaffolder.cohere_connector(project_name)
+        scaffolder = Scaffolder()
+        scaffolder.cohere_connector(project_name)
 
-    typer.echo("\n🏗️  Installing dependencies...\n")
+        typer.echo("\n🏗️  Installing dependencies...\n")
 
-    os.chdir(project_name)
-    os.system("poetry shell")
-    os.system("poetry install --no-root")
+        os.chdir(project_name)
+        run_command(["poetry", "install", "--no-root"])
 
-    typer.echo("\n✅ Project created successfully!\n")
+        typer.echo("\n✅ Project created successfully!\n")
 
+    except Exception as e:
+        typer.echo(f"\n❌ Error: {e}\n")
 
 if __name__ == "__main__":
     app()

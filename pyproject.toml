@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "create-cohere-connector"
-version = "0.1.3"
+version = "0.1.9"
 description = "Scaffold a custom Cohere connector"
 authors = ["dcarpintero"]
 license = "Apache 2.0"
@@ -19,4 +19,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-create-cohere-connector = "create_cohere_connector.cli:main"
+create-cohere-connector = "create_cohere_connector.cli:app"

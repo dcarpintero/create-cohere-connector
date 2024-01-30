@@ -1,21 +1,25 @@
-"""	
-Scaffold a custom Cohere connector project
-"""
 import os
 from dataclasses import dataclass
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-
+from pathlib import Path
+import logging
 
 @dataclass
 class ScaffolderConfig:
     """
     Configuration settings
     """
-    TEMPLATES_DIR = './_templates_'
-    OUTPUT_DIR = './output'
+    BASE_DIR = Path(__file__).resolve().parent
+    TEMPLATES_DIR = BASE_DIR / '_templates_'
+    OUTPUT_DIR = BASE_DIR / 'output'
     PROJECT_TEMPLATE = 'project_template.py.jinja'
     DEPLOY_TEMPLATE = 'deploy_template.py.jinja'
     ENV_TEMPLATE = 'env_template.jinja'
+    README_TEMPLATE = 'README.md.jinja'
+    GITIGNORE_TEMPLATE = '.gitignore.jinja'
+    APP_TEMPLATE = 'app.py.jinja'
+    CLIENT_TEMPLATE = 'client.py.jinja'
+    DATAMODELS_TEMPLATE = 'datamodels.py.jinja'
 
 class Scaffolder:
     """
@@ -23,7 +27,6 @@ class Scaffolder:
     """
     def __init__(self):
         self.config = ScaffolderConfig()
-
 
     def render_template(self, template_name, context=None):
         """
@@ -36,75 +39,82 @@ class Scaffolder:
             loader=FileSystemLoader(searchpath=self.config.TEMPLATES_DIR),
             autoescape=select_autoescape()
         )
-        template = env.get_template(template_name)
-        return template.render(context)
-
+        try:
+            template = env.get_template(template_name)
+            return template.render(context)
+        except Exception as e:
+            logging.error(f"Error rendering template {template_name}: {e}")
+            raise
 
     def create_directory(self, path):
         """
         Create a directory if it doesn't exist
         """
         try:
-            os.makedirs(path)
-            print(f"Directory '{path}' created")
-        except FileExistsError:
-            print(f"Directory '{path}' already exists")
-
+            os.makedirs(path, exist_ok=True)
+            logging.info(f"Directory '{path}' created")
+        except Exception as e:
+            logging.error(f"Error creating directory {path}: {e}")
+            raise
 
     def create_file(self, path, content=''):
         """
         Create a file if it doesn't exist
         """
-        with open(path, 'w', encoding='utf-8') as file:
-            file.write(content)
-            print(f"File '{path}' created")
-
+        try:
+            with open(path, 'w', encoding='utf-8') as file:
+                file.write(content)
+                logging.info(f"File '{path}' created")
+        except Exception as e:
+            logging.error(f"Error creating file {path}: {e}")
+            raise
 
     def cohere_connector(self, project_name):
         """
         Scaffold a custom Cohere connector project
         """
-        # Create 'base' directory
-        base_path = project_name
-        self.create_directory(base_path)
+        try:
+            # Create 'base' directory
+            base_path = Path(project_name)
+            self.create_directory(base_path)
 
-        # Create 'provider' directory
-        provider_path = os.path.join(base_path, 'provider')
-        self.create_directory(provider_path)
-        self.create_file(f'{provider_path}/__init__.py')
+            # Create 'provider' directory
+            provider_path = base_path / 'provider'
+            self.create_directory(provider_path)
+            self.create_file(provider_path / '__init__.py')
 
-        # pyproject.toml
-        pyproject_content = self.render_template(self.config.PROJECT_TEMPLATE, {'project_name': project_name})
-        self.create_file(f'{project_name}/pyproject.toml', pyproject_content)
+            # pyproject.toml
+            pyproject_content = self.render_template(self.config.PROJECT_TEMPLATE, {'project_name': project_name})
+            self.create_file(base_path / 'pyproject.toml', pyproject_content)
 
-        # .env-template
-        env_content = self.render_template(self.config.ENV_TEMPLATE)
-        self.create_file(f'{project_name}/.env-template', env_content)
+            # .env-template
+            env_content = self.render_template(self.config.ENV_TEMPLATE)
+            self.create_file(base_path / '.env-template', env_content)
 
-        # deploy.py
-        deploy_content = self.render_template(self.config.DEPLOY_TEMPLATE)
-        file_path = os.path.join(base_path, 'deploy.py')
-        self.create_file(file_path, deploy_content)
+            # deploy.py
+            deploy_content = self.render_template(self.config.DEPLOY_TEMPLATE)
+            self.create_file(base_path / 'deploy.py', deploy_content)
 
-        # README.md
-        readme_content = self.render_template('README.md.jinja', {'project_name': project_name})
-        self.create_file(f'{project_name}/README.md', readme_content)
+            # README.md
+            readme_content = self.render_template(self.config.README_TEMPLATE, {'project_name': project_name})
+            self.create_file(base_path / 'README.md', readme_content)
 
-        # .gitingore
-        gitignore_content = self.render_template('.gitignore.jinja')
-        self.create_file(f'{project_name}/.gitignore', gitignore_content)
+            # .gitignore
+            gitignore_content = self.render_template(self.config.GITIGNORE_TEMPLATE)
+            self.create_file(base_path / '.gitignore', gitignore_content)
 
-        # provider/app.py
-        app_content = self.render_template('app.py.jinja')
-        file_path = os.path.join(provider_path, 'app.py')
-        self.create_file(file_path, app_content)
+            # provider/app.py
+            app_content = self.render_template(self.config.APP_TEMPLATE)
+            self.create_file(provider_path / 'app.py', app_content)
 
-        # provider/client.py
-        client_content = self.render_template('client.py.jinja')
-        file_path = os.path.join(provider_path, 'client.py')
-        self.create_file(file_path, client_content)
+            # provider/client.py
+            client_content = self.render_template(self.config.CLIENT_TEMPLATE)
+            self.create_file(provider_path / 'client.py', client_content)
 
-        # provider/datamodels.py
-        datamodels_content = self.render_template('datamodels.py.jinja')
-        file_path = os.path.join(provider_path, 'datamodels.py')
-        self.create_file(file_path, datamodels_content)
+            # provider/datamodels.py
+            datamodels_content = self.render_template(self.config.DATAMODELS_TEMPLATE)
+            self.create_file(provider_path / 'datamodels.py', datamodels_content)
+
+        except Exception as e:
+            logging.error(f"Error in cohere_connector: {e}")
+            raise
