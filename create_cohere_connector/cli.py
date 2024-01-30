@@ -1,6 +1,6 @@
 import os
 import typer
-from connector.scaffold import Scaffolder
+from create_connector_project.scaffold import Scaffolder
 from jinja2 import Environment, FileSystemLoader
 
 app = typer.Typer()
