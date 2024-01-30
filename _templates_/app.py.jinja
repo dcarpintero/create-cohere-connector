@@ -1,59 +1,58 @@
-# app.py
 import logging
 import os
-from datetime import datetime
+import uvicorn
+
+from client import CustomClient
 from typing import List, Optional
-
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, Header, Request
-from pydantic import BaseModel
+from datamodels import DataItem, Request, Response
 
-from client import CustomClient  # Import CustomClient
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
+
+load_dotenv()
+SERVICE_API_KEY = os.getenv("SERVICE_API_KEY")
 app = FastAPI()
+client = CustomClient()
 
-# Environment vars and authentication methods remain the same
 
-# ----------------------------------------------------
-# Pydantic Models
-# ----------------------------------------------------
-class SimpleData(BaseModel):
-    """Model representing simple data."""
-    id: int
-    name: str
-    description: str
+def authenticate(Authorization: str = Header(None)) -> None:
+    """
+    Authenticate the user using the 'Authorization' header.
 
-class SearchDataBody(BaseModel):
-    query: Optional[str] = None
+    Args:
+        Authorization (str, optional): Authorization header. Defaults to Header(None).
+    """
+    if Authorization is None or Authorization != f"Bearer {SERVICE_API_KEY}":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    logging.debug("authenticate: (OK)")
 
-class SearchDataResponse(BaseModel):
-    """Model for search response."""
-    results: List[SimpleData]
 
-# ----------------------------------------------------
-# Custom Client Initialization
-# ----------------------------------------------------
-custom_client = CustomClient()
+@app.post("/search", response_model=Response)
+async def search(request: Optional[Request] = None, 
+                 user: None = Depends(authenticate)) -> Response:
+    """
+    Search Endpoint
 
-# ----------------------------------------------------
-# API Endpoints
-# ----------------------------------------------------
-@app.post("/search", response_model=SearchDataResponse)
-async def search_data(request: Request, user: None = Depends(authenticate_user)) -> SearchDataResponse:
-    """Endpoint to get data based on a query."""
+    Args:
+        request (Optional[Request], optional): Request object. Defaults to None.
+        user (None, optional): User object. Defaults to Depends(authenticate).
+
+    Returns:
+        Response: Response object (see datamodels.py)
+    """
+    if request is None:
+        logging.debug(f"search: missing_body")
+        return Response(results=[])
     try:
-        body = await request.json()
-        search_body = SearchDataBody(**body)
-
-        query = search_body.query
-        logging.info(f"Received search_data request with query: {query}")
-
-        data = custom_client.get_data(query)
-        return SearchDataResponse(results=[SimpleData(**d) for d in data])
+        logging.debug(f"search:request.query: {request.query}")
+        data = client.search(query=request.query)
+        return Response(results=[DataItem(**d) for d in data])
     except Exception as error:
-        logging.error(f"search_data encountered an error: {error}")
-        return SearchDataResponse(results=[])
+        logging.error(f"search:error: {error}")
+        return Response(results=[])
 
-# Main 
+
 if __name__ == "__main__":
-    uvicorn.run(app, host='0.0.0.0', port=8080)
+    run(app, host='0.0.0.0', port=8080)
