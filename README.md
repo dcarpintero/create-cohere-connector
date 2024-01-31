@@ -4,6 +4,8 @@ Generates a custom Cohere Connector with one command. [Cohere Connectors](https:
 
 Note that this is an experimental project. If something doesn’t work, please [file an issue](https://github.com/dcarpintero/create-cohere-connector/issues/new).
 
+**You might also refer to the official Cohere repo for Connectors: https://github.com/cohere-ai/quick-start-connectors**
+
 ## 🧮 What is included?
 
 Your environment will have everything you need to quickly prototype and deploy a custom Cohere Connector:
@@ -115,6 +117,7 @@ python deploy.py
 
 If you would like to contribute, here are some features that we are planning to add:
 
+- Improve Poetry virtual environment creation
 - Flask support
 - Semantic caching
 - OAuth 2.0
