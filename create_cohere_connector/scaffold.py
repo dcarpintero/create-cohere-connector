@@ -11,7 +11,6 @@ class ScaffolderConfig:
     """
     BASE_DIR = Path(__file__).resolve().parent
     TEMPLATES_DIR = BASE_DIR / '_templates_'
-    OUTPUT_DIR = BASE_DIR / 'output'
     PROJECT_TEMPLATE = 'project_template.py.jinja'
     DEPLOY_TEMPLATE = 'deploy_template.py.jinja'
     ENV_TEMPLATE = 'env_template.jinja'
@@ -114,6 +113,18 @@ class Scaffolder:
             # provider/datamodels.py
             datamodels_content = self.render_template(self.config.DATAMODELS_TEMPLATE)
             self.create_file(provider_path / 'datamodels.py', datamodels_content)
+
+            # provider provider.py
+            provider_content = self.render_template('provider.py.jinja')
+            self.create_file(provider_path / 'provider.py', provider_content)
+
+            # provider exceptions.py
+            exceptions_content = self.render_template('exceptions.py.jinja')
+            self.create_file(provider_path / 'exceptions.py', exceptions_content)
+
+            # provider config.py
+            config_content = self.render_template('config.py.jinja')
+            self.create_file(provider_path / 'config.py', config_content)
 
         except Exception as e:
             logging.error(f"Error in cohere_connector: {e}")

@@ -1,6 +1,6 @@
 import unittest
 import os
-from connector.scaffold import Scaffolder
+from create_cohere_connector.scaffold import Scaffolder
 
 
 class TestScaffoldLogic(unittest.TestCase):
@@ -16,8 +16,8 @@ class TestScaffoldLogic(unittest.TestCase):
         """
         Test render_template function
         """
-        template_content = self.scaffolder.render_template(self.project_template_path, {'project_name': 'weather_connector'})
-        self.assertIn('weather_connector', template_content)
+        template_content = self.scaffolder.render_template(self.project_template_path, {'project_name': 'helloworld'})
+        self.assertIn('helloworld', template_content)
 
     def test_create_directory(self):
         """

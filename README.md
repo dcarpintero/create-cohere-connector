@@ -20,34 +20,34 @@ Your environment will have everything you need to quickly prototype and deploy a
 
 1. Install ``create-cohere-connector`` package:
 
-It is highly recommended to install this package within a virtual environment:
+You might install this package globall:
 
 ```sh
+poetry self add poetry-scaffold
+```
+
+or within a virtual environment:
+
+```sh
+# Windows
 py -m venv .venv
 .venv\scripts\activate
 ```
 
 ```sh
+# macOS/Linux
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-and then, run the installation:
-
 ```sh
-pip3 install create-cohere-connector --user
+pip3 install create-cohere-connector
 ```
 
 2. Bootstrap your project:
 
 ```sh
-create-cohere-connector
-```
-
-or
-
-```sh
-python -m create_cohere_connector.cli
+poetry run create-cohere-connector
 ```
 
 This will prompt for a project name:
@@ -92,22 +92,20 @@ You might rename ``.env_template`` to ``.env``, and complete it.
 poetry shell
 ```
 
-5. Start API service
-
-Inside the ``provider`` directory:
+5. Install dependencies
 
 ```sh
-poetry shell
-uvicorn app:app --reload
-```
-
-if you encounter any trouble in this step, you might need to run:
-
-```sh
+poetry config virtualenvs.in-project true
 poetry install --no-root
 ```
 
-6. Deploy Cohere Connector
+6. Start API service
+
+```sh
+poetry run uvicorn app:app --app-dir provider --port 5000 --reload
+```
+
+7. Deploy Cohere Connector
 
 ```sh
 python deploy.py
