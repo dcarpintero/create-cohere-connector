@@ -72,7 +72,10 @@ myconnector
 └── provider
     ├── __init__.py
     ├── app.py
+    ├── config.py
     ├── client.py
+    ├── provider.py
+    ├── exceptions.py
     └── datamodels.py
 ```
 
