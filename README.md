@@ -86,7 +86,7 @@ and install dependencies:
 ```
 
 <p align="center">
-  <img src="./static/create-connector-01.png" width="400">
+  <img src="./static/create-connector-01.png" width="700">
 </p>
 
 3. Set environment variables
@@ -119,7 +119,7 @@ python deploy.py
 ```
 
 <p align="center">
-  <img src="./static/create-connector-02.png" width="500">
+  <img src="./static/create-connector-02.png" width="700">
 </p>
 
 ## 👩‍💻 Contributions
