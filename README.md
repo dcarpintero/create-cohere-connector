@@ -85,6 +85,10 @@ and install dependencies:
 ✅ Project created successfully!
 ```
 
+<p align="center">
+  <img src="./static/create-connector-01.png" width="400">
+</p>
+
 3. Set environment variables
 
 You might rename ``.env_template`` to ``.env``, and complete it.
@@ -113,6 +117,10 @@ poetry run uvicorn app:app --app-dir provider --port 5000 --reload
 ```sh
 python deploy.py
 ```
+
+<p align="center">
+  <img src="./static/create-connector-02.png" width="500">
+</p>
 
 ## 👩‍💻 Contributions
 
